@@ -1,8 +1,20 @@
 #include <iostream>
+#include <sys/time.h>
 
 using namespace std;
 
+double dtime() {
+  double tseconds = 0;
+  struct timeval t;
+  gettimeofday(&t, NULL);
+  tseconds = (double)t.tv_sec + (double)t.tv_usec * 1.0e-6;
+  return tseconds;
+}
+
 typedef double DTYPE;
+
+
+
 
 void jacobi_iteration(DTYPE *gridA, DTYPE *gridB, int width, int height) {
 #pragma omp parallel for
@@ -29,9 +41,9 @@ DTYPE compute_residual(DTYPE *gridA, DTYPE *gridB, int width, int height) {
 }
 
 int main(int argc, char **argv) {
-  const int width = 16000;
-  const int height = 16000;
-  const int iters = 100;
+  const int width = 8000;
+  const int height = 8000;
+  const int iters = 60;
   DTYPE *gridA = new DTYPE[width * height];
   DTYPE *gridB = new DTYPE[width * height];
 
@@ -48,6 +60,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  double t1 = dtime();
   for (int it = 0; it < iters; it++) {
 
     if (it % 10 == 0)
@@ -58,6 +71,12 @@ int main(int argc, char **argv) {
 
     swap(gridA, gridB);
   }
+  double t2 = dtime();
+  double dt = t2 - t1;
+  cout << dt << " ms   " << (int64_t)iters * width * height * 1.05 / dt / 1e9
+       << " GLup/s   "
+       << (int64_t)iters * width * height * sizeof(DTYPE) * 2 * 1.05 / dt / 1e9
+       << " GB/s\n";
 
   delete gridA;
   delete gridB;
