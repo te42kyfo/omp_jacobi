@@ -38,14 +38,11 @@ int main(int argc, char **argv) {
   }
 
 
-  #pragma acc enter data  copyin(gridA[:width*height]) copyin(gridB[:width*height])
 
   double t1 = dtime();
   for (int it = 0; it < iters; it++) {
 
       DTYPE residual = 0.0;
-#pragma acc data present(gridA[:width*height]), present(gridB[:width*height]), copy(residual)
-    {
 
 #pragma acc parallel loop independent
         for (int y = 1; y < height - 1; y++) {
@@ -69,7 +66,6 @@ int main(int argc, char **argv) {
                      gridB[y * width + x - 1] + gridB[y * width + x + 1]);
             }
         }
-    }
 
     cout << it << " " << residual << "\n";
 
