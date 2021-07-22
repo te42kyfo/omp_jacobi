@@ -3,7 +3,7 @@ NVCC := nvc++
 
 # internal flags
 NVCCFLAGS   :=  -Minfo=mp -mp=gpu -O3
-CCFLAGS     := 
+CCFLAGS     :=
 LDFLAGS     :=
 NAME 		:= omp-jacobi
 PREFIX		:= .

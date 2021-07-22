@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
   double t1 = dtime();
   for (int it = 0; it < iters; it++) {
-#pragma omp parallel for
+#pragma omp target parallel for map(gridA[:width*height], gridB[:width*height])
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
