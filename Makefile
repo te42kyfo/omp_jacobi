@@ -2,7 +2,7 @@ NVCC := nvc++
 
 
 # internal flags
-NVCCFLAGS   :=  -Minfo=all -mp=gpu -gpu=managed
+NVCCFLAGS   :=  -Minfo=all -mp=gpu
 CCFLAGS     := 
 LDFLAGS     :=
 NAME 		:= omp-jacobi
