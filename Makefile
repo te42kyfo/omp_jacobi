@@ -5,7 +5,7 @@ NVCC := nvc++
 NVCCFLAGS   :=  -Minfo=all -mp=gpu -gpu=managed
 CCFLAGS     := 
 LDFLAGS     :=
-NAME 		:= cuda-jacobi
+NAME 		:= omp-jacobi
 PREFIX		:= .
 INCLUDES 	:= 			
 
