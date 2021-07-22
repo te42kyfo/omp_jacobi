@@ -2,10 +2,10 @@ NVCC := nvc++
 
 
 # internal flags
-NVCCFLAGS   :=  -Minfo=all -mp=gpu -gpu=managed
+NVCCFLAGS   :=  -Minfo=mp -mp=gpu -O3
 CCFLAGS     := 
 LDFLAGS     :=
-NAME 		:= cuda-jacobi
+NAME 		:= omp-jacobi
 PREFIX		:= .
 INCLUDES 	:= 			
 
