@@ -21,7 +21,6 @@ int main(int argc, char **argv) {
   gridA = (double *)malloc(width * height * sizeof(double));
   gridB = (double *)malloc(width * height * sizeof(double));
 
-
 #pragma omp parallel for
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
@@ -35,9 +34,14 @@ int main(int argc, char **argv) {
     }
   }
 
+#pragma omp target enter data map(to                                           \
+                                  : gridA[:width * height], gridB              \
+                                  [:width * height])
+
   double t1 = dtime();
   for (int it = 0; it < iters; it++) {
-#pragma omp target parallel for map(gridA[:width*height], gridB[:width*height])
+
+#pragma omp target parallel for
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
@@ -45,7 +49,12 @@ int main(int argc, char **argv) {
                     gridB[(y + 1) * width + x] + gridB[(y - 1) * width + x]);
       }
     }
-    swap(gridA, gridB);
+    #pragma omp target parallel for
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        gridB[y * width + x] = gridA[y * width + x];
+      }
+    }
   }
 
   double t2 = dtime();
@@ -55,8 +64,8 @@ int main(int argc, char **argv) {
        << (int64_t)iters * width * height * sizeof(double) * 2 * 1.0 / dt / 1e9
        << " GB/s\n";
 
-  // GPU_ERROR(cudaFree(gridA));
-  // GPU_ERROR(cudaFree(gridB));
+  free(gridA);
+  free(gridB);
 
   return 0;
 }
