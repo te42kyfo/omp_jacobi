@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   double t1 = dtime();
   for (int it = 0; it < iters; it+=2) {
 
-#pragma omp target parallel for
+#pragma omp target parallel for collapse(2)
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
       }
     }
 
-#pragma omp target parallel for
+#pragma omp target parallel for collapse(2)
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridB[y * width + x] =
@@ -59,7 +59,6 @@ int main(int argc, char **argv) {
       }
     }
   }
-
   double t2 = dtime();
   double dt = t2 - t1;
   cout << dt << " ms   "
