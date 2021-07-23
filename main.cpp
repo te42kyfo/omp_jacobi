@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
                                   [:width * height])
 
   double t1 = dtime();
-  for (int it = 0; it < iters; it++) {
+  for (int it = 0; it < iters; it+=2) {
 
 #pragma omp target parallel for
     for (int y = 1; y < height - 1; y++) {
@@ -49,10 +49,13 @@ int main(int argc, char **argv) {
                     gridB[(y + 1) * width + x] + gridB[(y - 1) * width + x]);
       }
     }
-    #pragma omp target parallel for
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        gridB[y * width + x] = gridA[y * width + x];
+
+#pragma omp target parallel for
+    for (int y = 1; y < height - 1; y++) {
+      for (int x = 1; x < width - 1; x++) {
+        gridB[y * width + x] =
+            0.25 * (gridA[y * width + x + 1] + gridA[y * width + x - 1] +
+                    gridA[(y + 1) * width + x] + gridA[(y - 1) * width + x]);
       }
     }
   }
