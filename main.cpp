@@ -12,8 +12,8 @@ double dtime() {
 }
 
 int main(int argc, char **argv) {
-  const int width = 20000;
-  const int height = 20000;
+  const int width = 16000;
+  const int height = 16000;
 
   const int iters = 10;
   double *gridA;
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   double t1 = dtime();
   for (int it = 0; it < iters; it+=2) {
 
-#pragma omp target parallel for collapse(2)
+#pragma omp target teams distribute parallel for collapse(2)
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
       }
     }
 
-#pragma omp target parallel for collapse(2)
+#pragma omp target teams distribute parallel for collapse(2)
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridB[y * width + x] =
