@@ -12,8 +12,8 @@ double dtime() {
 }
 
 int main(int argc, char **argv) {
-  const int width = 16000;
-  const int height = 16000;
+  const int width = 16002;
+  const int height = 16002;
 
   const int iters = 10;
   double *gridA;
@@ -39,23 +39,28 @@ int main(int argc, char **argv) {
                                   [:width * height])
 
   double t1 = dtime();
-  for (int it = 0; it < iters; it+=2) {
+  for (int it = 0; it < iters; it += 2) {
 
 #pragma omp target teams distribute parallel for collapse(2)
-    for (int y = 1; y < height - 1; y++) {
+    for (int oy = 1; oy < height - 1; oy += 4) {
       for (int x = 1; x < width - 1; x++) {
-        gridA[y * width + x] =
-            0.25 * (gridB[y * width + x + 1] + gridB[y * width + x - 1] +
-                    gridB[(y + 1) * width + x] + gridB[(y - 1) * width + x]);
+        for (int iy = 0; iy < 4; iy++) {
+          int y = oy + iy;
+          gridA[y * width + x] =
+              0.25 * (gridB[y * width + x + 1] + gridB[y * width + x - 1] +
+                      gridB[(y + 1) * width + x] + gridB[(y - 1) * width + x]);
+        }
       }
     }
-
-#pragma omp target teams distribute parallel for collapse(2)
-    for (int y = 1; y < height - 1; y++) {
+    #pragma omp target teams distribute parallel for collapse(2)
+    for (int oy = 1; oy < height - 1; oy += 4) {
       for (int x = 1; x < width - 1; x++) {
-        gridB[y * width + x] =
-            0.25 * (gridA[y * width + x + 1] + gridA[y * width + x - 1] +
-                    gridA[(y + 1) * width + x] + gridA[(y - 1) * width + x]);
+        for (int iy = 0; iy < 4; iy++) {
+          int y = oy + iy;
+          gridB[y * width + x] =
+              0.25 * (gridA[y * width + x + 1] + gridA[y * width + x - 1] +
+                      gridA[(y + 1) * width + x] + gridA[(y - 1) * width + x]);
+        }
       }
     }
   }
