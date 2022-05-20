@@ -6,10 +6,10 @@ NVCCFLAGS   :=  -Minfo=all -mp=gpu
 CCFLAGS     := 
 LDFLAGS     :=
 NAME 		:= omp-jacobi
-PREFIX		:= .
+
 INCLUDES 	:= 			
 
-$(PREFIX)/$(NAME): main.cpp Makefile
+%: %.cpp Makefile
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) -o $@ $< $(LDFLAGS)
 
 
