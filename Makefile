@@ -2,14 +2,14 @@ NVCC := nvc++
 
 
 # internal flags
-NVCCFLAGS   :=  -Minfo=mp -mp=gpu -O3
-CCFLAGS     :=
+NVCCFLAGS   :=  -Minfo=all -mp=gpu
+CCFLAGS     := 
 LDFLAGS     :=
 NAME 		:= omp-jacobi
-PREFIX		:= .
+
 INCLUDES 	:= 			
 
-$(PREFIX)/$(NAME): main.cpp Makefile
+%: %.cpp Makefile
 	$(NVCC) $(NVCCFLAGS) $(INCLUDES) -o $@ $< $(LDFLAGS)
 
 
