@@ -14,4 +14,5 @@ INCLUDES 	:=
 
 
 clean:
-	rm -f ./$(NAME)
+	rm  main1 main2 main3 main4 main5 main6
+	rm  *.qdrep *.ncu-rep

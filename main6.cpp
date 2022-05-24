@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
   double dt = t2 - t1;
   cout << dt*1000 << " ms   " << 4 * (int64_t)iters * width * height / dt / 1e9
        << " GLup/s   "
-       << (int64_t)iters * width * height * sizeof(double) * 1.0 / dt / 1e9
+       << (int64_t)iters * width * height * sizeof(double) * 2.0 / dt / 1e9
        << " GB/s\n";
 
   free(gridA);
