@@ -47,8 +47,10 @@ int main(int argc, char **argv) {
         for (int iy = 0; iy < 4; iy++) {
           int y = oy + iy;
           gridA[y * width + x] =
-              0.25 * (gridB[y * width + x + 1] + gridB[y * width + x - 1] +
-                      gridB[(y + 1) * width + x] + gridB[(y - 1) * width + x]);
+              0.25 * (gridB[y * width + x + 1] +
+                      gridB[y * width + x - 1] +
+                      gridB[(y + 1) * width + x] +
+                      gridB[(y - 1) * width + x]);
         }
       }
     }
@@ -58,17 +60,19 @@ int main(int argc, char **argv) {
         for (int iy = 0; iy < 4; iy++) {
           int y = oy + iy;
           gridB[y * width + x] =
-              0.25 * (gridA[y * width + x + 1] + gridA[y * width + x - 1] +
-                      gridA[(y + 1) * width + x] + gridA[(y - 1) * width + x]);
+              0.25 * (gridA[y * width + x + 1] +
+                      gridA[y * width + x - 1] +
+                      gridA[(y + 1) * width + x] +
+                      gridA[(y - 1) * width + x]);
         }
       }
     }
   }
   double t2 = dtime();
   double dt = t2 - t1;
-  cout << dt << " ms   " << 4 * (int64_t)iters * width * height * 1.0 / dt / 1e9
+  cout << dt*1000 << " ms   " << 4 * (int64_t)iters * width * height / dt / 1e9
        << " GLup/s   "
-       << (int64_t)iters * width * height * sizeof(double) * 2 * 1.0 / dt / 1e9
+       << (int64_t)iters * width * height * sizeof(double) * 1.0 / dt / 1e9
        << " GB/s\n";
 
   free(gridA);
