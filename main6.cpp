@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   double t1 = dtime();
   for (int it = 0; it < iters; it += 2) {
 
-#pragma omp target parallel for collapse(2)
+#pragma omp target teams distribute parallel for collapse(2)
     for (int oy = 1; oy < height - 1; oy += 4) {
       for (int x = 1; x < width - 1; x++) {
         for (int iy = 0; iy < 4; iy++) {
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
         }
       }
     }
-    #pragma omp target parallel for collapse(2)
+    #pragma omp target teams distribute parallel for collapse(2)
     for (int oy = 1; oy < height - 1; oy += 4) {
       for (int x = 1; x < width - 1; x++) {
         for (int iy = 0; iy < 4; iy++) {

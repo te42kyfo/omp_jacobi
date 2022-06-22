@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   double t1 = dtime();
   for (int it = 0; it < iters; it++) {
 
-#pragma omp target parallel for
+#pragma omp target teams distribute parallel for
     for (int y = 1; y < height - 1; y++) {
       for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
                     gridB[(y - 1) * width + x]);
       }
     }
-    #pragma omp target parallel for
+    #pragma omp target teams distribute parallel for
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         gridB[y * width + x] = gridA[y * width + x];
