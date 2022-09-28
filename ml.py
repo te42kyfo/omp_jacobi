@@ -41,52 +41,56 @@ x2_test = 4.5 * rng.rand(n_points) - 2.25
 
 tic = time.perf_counter()
 
+initial_function_selection = 1
 
-for initial_function_selection in range(1, 2):
 
-    tf.random.set_seed(0)
 
-    model_in = keras.Input(shape=(2,))
-    model_d1 = layers.Dense(n_neurons_per_layer, activation='relu')(model_in)
-    model_d2 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d1)
-    model_d3 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d2)
-    model_d4 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d3)
-    model_d5 = layers.Dense(1)(model_d4)
-    model = keras.Model(inputs=[model_in], outputs=[model_d5])
+tf.random.set_seed(0)
 
-    model.compile(loss=loss, optimizer=optimizer)
+model_in = keras.Input(shape=(2,))
+model_d1 = layers.Dense(n_neurons_per_layer, activation='relu')(model_in)
+model_d2 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d1)
+model_d3 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d2)
+model_d4 = layers.Dense(n_neurons_per_layer, activation='relu')(model_d3)
+model_d5 = layers.Dense(1)(model_d4)
+model = keras.Model(inputs=[model_in], outputs=[model_d5])
 
-    y_initial = [initial_function(x1_test[n], x2_test[n],
-                                  initial_function_selection)
-                 for n in range(n_points)]
-    y_initial = np.array(y_initial)
+model.compile(loss=loss, optimizer=optimizer)
 
-    for i in range(n_iterations + 1):
+y_initial = [initial_function(x1_test[n], x2_test[n],
+                              initial_function_selection)
+             for n in range(n_points)]
+y_initial = np.array(y_initial)
 
-        x1_train = 4.5 * rng.rand(n_train_points) - 2.25
-        x2_train = 4.5 * rng.rand(n_train_points) - 2.25
 
-        x_train_transposed = np.transpose(np.array([x1_train, x2_train]))
+for i in range(n_iterations + 1):
+    x1_train = 4.5 * rng.rand(n_train_points) - 2.25
+    x2_train = 4.5 * rng.rand(n_train_points) - 2.25
 
-        y_calculated = np.empty(n_points)
+    x_train_transposed = np.transpose(np.array([x1_train, x2_train]))
 
-        if i == 0:
+    y_calculated = np.empty(n_points)
 
-            y_train = [initial_function(x1_train[k], x2_train[k],
-                                        initial_function_selection)
-                       for k in range(n_train_points)]
-            y_train = np.array(y_train)
+    if i == 0:
 
-        y_train_transposed = np.transpose(y_train)
+        y_train = [initial_function(x1_train[k], x2_train[k],
+                                    initial_function_selection)
+                   for k in range(n_train_points)]
+        y_train = np.array(y_train)
 
-        model.fit(x_train_transposed, y_train_transposed, epochs=40,
-                  verbose=0)
+    y_train_transposed = np.transpose(y_train)
 
-    for i in range(n_points):
-        a = tf.Variable([[4.5 * rng.rand() - 2.25, 4.5 * rng.rand() -
-                          2.25]])
-        b = model(a)
+    #with nvtx.annotate("data generation", color="purple"):
 
+    model.fit(x_train_transposed, y_train_transposed, epochs=40,
+              verbose=0)
+
+for i in range(n_points):
+
+    a = tf.Variable([[4.5 * rng.rand() - 2.25, 4.5 * rng.rand() -
+                          2.25]])    
+    b = model(a)
+    
 
 toc = time.perf_counter()
 
