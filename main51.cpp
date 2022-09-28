@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
   for (int it = 0; it < iters; it += 2) {
 
 #pragma omp target teams distribute parallel for collapse(2)
-    for (int x = 1; x < width - 1; x++) {
-      for (int y = 1; y < height - 1; y++) {
+    for (int y = 1; y < height - 1; y++) {
+      for (int x = 1; x < width - 1; x++) {
         gridA[y * width + x] =
             0.25 * (gridB[y * width + x + 1] +
                     gridB[y * width + x - 1] +
@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
     }
 
 #pragma omp target teams distribute parallel for collapse(2)
-    for (int x = 1; x < width - 1; x++) {
-      for (int y = 1; y < height - 1; y++) {
+    for (int y = 1; y < height - 1; y++) {
+      for (int x = 1; x < width - 1; x++) {
         gridB[y * width + x] =
             0.25 * (gridA[y * width + x + 1] +
                     gridA[y * width + x - 1] +

@@ -39,11 +39,12 @@ int main(int argc, char **argv) {
                                   [:width * height])
 
   double t1 = dtime();
-  for (int it = 0; it < iters; it += 2) {
+  for (int it = 0; it < iters; it+=2) {
 
-#pragma omp target teams distribute parallel for collapse(2)
-    for (int x = 1; x < width - 1; x++) {
-      for (int y = 1; y < height - 1; y++) {
+#pragma omp target teams distribute parallel for
+
+      for (int x = 1; x < width - 1; x++) {
+    for (int y = 1; y < height - 1; y++) {
         gridA[y * width + x] =
             0.25 * (gridB[y * width + x + 1] +
                     gridB[y * width + x - 1] +
@@ -52,9 +53,10 @@ int main(int argc, char **argv) {
       }
     }
 
-#pragma omp target teams distribute parallel for collapse(2)
-    for (int x = 1; x < width - 1; x++) {
-      for (int y = 1; y < height - 1; y++) {
+#pragma omp target teams distribute parallel for
+
+      for (int x = 1; x < width - 1; x++) {
+    for (int y = 1; y < height - 1; y++) {
         gridB[y * width + x] =
             0.25 * (gridA[y * width + x + 1] +
                     gridA[y * width + x - 1] +
@@ -63,6 +65,7 @@ int main(int argc, char **argv) {
       }
     }
   }
+
   double t2 = dtime();
   double dt = t2 - t1;
   cout << dt*1000 << " ms   " << 4 * (int64_t)iters * width * height / dt / 1e9
